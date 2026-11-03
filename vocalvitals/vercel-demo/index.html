@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VocalVitals — Real Swallow Detection</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">AI + CERVICAL AUSCULTATION</div>
+        <h1>VocalVitals</h1>
+        <p>Real swallow-event detection from the supplied annotated dataset.</p>
+      </div>
+      <div class="status"><span class="dot"></span><span id="modelStatus">Loading model…</span></div>
+    </header>
+
+    <section class="hero-grid">
+      <div class="hero-card glow">
+        <div class="hero-kicker">LIVE JUDGE DEMO</div>
+        <h2>Turn a real sensor window into an explainable prediction.</h2>
+        <p>Same 4-channel signal format used by the trained 1D CNN. Prediction runs directly in the browser.</p>
+        <div class="hero-flow">RAW RECORDING <span>→</span> 200 ms WINDOW <span>→</span> 1D CNN <span>→</span> SWALLOW / NON-SWALLOW</div>
+      </div>
+      <div class="hero-card">
+        <div class="mini-label">Dataset</div>
+        <div class="big-number">3,108</div>
+        <div class="muted">processed windows</div>
+        <div class="mini-row"><span>Channels</span><strong>4</strong></div>
+        <div class="mini-row"><span>Sample rate</span><strong>16 kHz</strong></div>
+        <div class="mini-row"><span>Window</span><strong>200 ms</strong></div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="section-title"><span>01</span> Select a real dataset example</div>
+      <div class="sample-grid">
+        <button class="sample-btn active" data-index="0"><span>SWALLOW</span><small>NS116 · row 0</small></button>
+        <button class="sample-btn" data-index="25"><span>NON-SWALLOW</span><small>S041 · row 25</small></button>
+        <button class="sample-btn" data-index="1"><span>SWALLOW</span><small>sample 2</small></button>
+        <button class="sample-btn" data-index="26"><span>NON-SWALLOW</span><small>sample 2</small></button>
+        <button class="sample-btn" data-index="2"><span>SWALLOW</span><small>sample 3</small></button>
+        <button class="sample-btn" data-index="27"><span>NON-SWALLOW</span><small>sample 3</small></button>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <div class="panel provenance">
+        <div class="section-title"><span>02</span> Dataset provenance</div>
+        <div class="provenance-card">
+          <div class="tag success">REAL ANNOTATED DATA</div>
+          <div class="kv"><span>Subject</span><strong id="subject">—</strong></div>
+          <div class="kv"><span>Source recording</span><strong id="stem">—</strong></div>
+          <div class="kv"><span>Ground truth</span><strong id="truth">—</strong></div>
+          <div class="kv"><span>Dataset row</span><strong id="row">—</strong></div>
+          <div class="kv"><span>Raw source</span><strong id="rawSource">—</strong></div>
+        </div>
+      </div>
+
+      <div class="panel decision">
+        <div class="section-title"><span>03</span> Model decision</div>
+        <div id="decisionBanner" class="decision-banner">Waiting…</div>
+        <div class="metric-grid">
+          <div class="metric-card"><span>Prediction</span><strong id="prediction">—</strong></div>
+          <div class="metric-card"><span>Swallow probability</span><strong id="probability">—</strong></div>
+          <div class="metric-card"><span>Ground truth</span><strong id="groundTruth">—</strong></div>
+        </div>
+        <div id="match" class="match">—</div>
+      </div>
+    </section>
+
+    <section class="panel waveform-panel">
+      <div class="section-title"><span>04</span> What the model sees</div>
+      <div class="chart-shell"><canvas id="waveform"></canvas></div>
+      <div class="legend">
+        <span><i></i> Channel 1</span><span><i></i> Channel 2</span><span><i></i> Channel 3</span><span><i></i> Channel 4</span>
+      </div>
+    </section>
+
+    <section class="panel evidence">
+      <div class="section-title"><span>05</span> Validation evidence</div>
+      <div class="metric-grid evidence-grid">
+        <div class="metric-card"><span>Accuracy</span><strong id="accuracy">—</strong></div>
+        <div class="metric-card"><span>Swallow recall</span><strong id="recall">—</strong></div>
+        <div class="metric-card"><span>Non-swallow specificity</span><strong id="specificity">—</strong></div>
+        <div class="metric-card"><span>Validation windows</span><strong id="validationN">—</strong></div>
+      </div>
+      <p class="note">Subject-wise internal validation estimate. The current labels support swallow-event detection; they do not establish aspiration diagnosis.</p>
+    </section>
+
+    <footer><span>VocalVitals</span><span>Prototype • Real dataset • Browser inference</span></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
